@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>系统监控走势图</title>
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+    <!-- ECharts 3 引入 -->
+    <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+</head>
+ 
+<body>
+    <div id="cpu" style="height:300px;border:1px solid #ccc;padding:10px;"></div>
+	<div id="mem" style="height:300px;border:1px solid #ccc;padding:10px;"></div>
+	<div id="diskio" style="height:300px;border:1px solid #ccc;padding:10px;"></div>
+	<div id="netio" style="height:300px;border:1px solid #ccc;padding:10px;"></div>
+	
+    <script type="text/javascript">
+ 
+    var cpuChart = echarts.init(document.getElementById('cpu'));
+	var memChart = echarts.init(document.getElementById('mem'));
+	var diskioChart = echarts.init(document.getElementById('diskio'));
+	var netioChart = echarts.init(document.getElementById('netio'));
+ 
+    cpuChart.setOption({
+		title : {
+			text: 'CPU使用率'
+		},
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['user','sys','interrupt','dpc']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+		/**
+		dataZoom : {
+			show : true,
+			realtime : true,
+			start : 20,
+			end : 80
+		},
+		**/
+        xAxis : [
+			{
+				type: 'category',
+				boundaryGap: true,
+				data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+			},
+        ],
+        yAxis : [
+            {
+				name : '百分比',
+                type : 'value'
+            }
+        ],
+        series: [
+			{
+                name: 'user',
+                type: 'line',
+			    stack: '总量',
+			    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'sys',
+                type: 'line',
+			    stack: '总量',
+			    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'interrupt',
+                type: 'line',
+			    stack: '总量',
+			    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'dpc',
+                type: 'line',
+			    stack: '总量',
+			    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            }
+		]
+    }); 
+	
+	memChart.setOption({
+		title : {
+			text: '内存使用率'
+		},
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['total','available','used','free']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+		/**
+		dataZoom : {
+			show : true,
+			realtime : true,
+			start : 20,
+			end : 80
+		},
+		**/
+        xAxis : [
+            {
+				name : '时间',
+                type : 'category',
+                boundaryGap : false,
+				data : (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            }
+        ],
+        yAxis : [
+            {
+				name : 'KB',
+                type : 'value'
+            }
+        ],
+        series: [
+			{
+                name: 'total',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'available',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'used',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'free',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            }
+		]
+    }); 
+	
+	diskioChart.setOption({
+		title : {
+			text: '磁盘IO'
+		},
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['read_bytes','write_bytes']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+		/**
+		dataZoom : {
+			show : true,
+			realtime : true,
+			start : 20,
+			end : 80
+		},
+		**/
+        xAxis : [
+            {
+				name : '时间',
+                type : 'category',
+                boundaryGap : false,
+				data : (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            }
+        ],
+        yAxis : [
+            {
+				name : 'KB/s',
+                type : 'value'
+            }
+        ],
+        series: [
+			{
+                name: 'read_bytes',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'write_bytes',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            }
+		]
+    }); 
+	
+	netioChart.setOption({
+		title : {
+			text: '网络IO'
+		},
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['send_bytes','recv_bytes']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+		/**
+		dataZoom : {
+			show : true,
+			realtime : true,
+			start : 20,
+			end : 80
+		},
+		**/
+        xAxis : [
+            {
+				name : '时间',
+                type : 'category',
+                boundaryGap : false,
+				data : (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            }
+        ],
+        yAxis : [
+            {
+				name : 'KB/s',
+                type : 'value'
+            }
+        ],
+        series: [
+			{
+                name: 'send_bytes',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            },
+			{
+                name: 'recv_bytes',
+                type: 'line',
+                data: (function (){
+					var arr = [];
+					for(var i=0;i<100;i++){
+						arr.push(0);
+					}
+					return arr;
+				})()
+            }
+		]
+    }); 
+	
+ 
+    var time = [""]
+		//process_series_data = []
+ 
+    //准备好统一的 callback 函数
+    var update_Chart = function (res) {
+    //res是json格式的response对象
+ 
+        // 隐藏加载动画
+        //cpuChart.hideLoading();
+		//memChart.hideLoading();
+ 
+        // 准备数据
+		timeInfo = res.time;
+		cpuInfo = res.cpu;
+		memInfo = res.mem;
+		diskioInfo = res.diskio;
+		netioInfo = res.netio;
+		
+		var axisData = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
+		// 动态数据接口 addData
+		cpuChart.addData([
+			[
+				0,        // 系列索引
+				parseFloat(cpuInfo[0]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				1,        // 系列索引
+				parseFloat(cpuInfo[1]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				2,        // 系列索引
+				parseFloat(cpuInfo[2]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				3,        // 系列索引
+				parseFloat(cpuInfo[3]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false,     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+				axisData
+			]		
+		]);
+		
+		memChart.addData([
+			[
+				0,        // 系列索引
+				parseFloat(memInfo[0]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				1,        // 系列索引
+				parseFloat(memInfo[1]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				2,        // 系列索引
+				parseFloat(memInfo[2]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				3,        // 系列索引
+				parseFloat(memInfo[3]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false,     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+				axisData
+			]			
+		]);
+		
+		diskioChart.addData([
+			[
+				0,        // 系列索引
+				parseFloat(diskioInfo[0]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				1,        // 系列索引
+				parseFloat(diskioInfo[1]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false,     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+				axisData
+			]			
+		]);
+		
+		netioChart.addData([
+			[
+				0,        // 系列索引
+				parseFloat(netioInfo[0]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+			],
+			[
+				1,        // 系列索引
+				parseFloat(netioInfo[1]), // 新增数据
+				false,     // 新增数据是否从队列头部插入
+				false,     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+				axisData
+			]			
+		]);
+    };
+ 
+    // 首次显示加载动画
+    //cpuChart.showLoading();
+	//memChart.showLoading(); 
+ 
+    // 建立socket连接，等待服务器“推送”数据，用回调函数更新图表
+    $(document).ready(function() {
+        namespace = '/test';
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+ 
+        socket.on('server_response', function(res) {
+            update_Chart(res);
+        });
+ 
+    });
+ 
+    </script>
+</body>
+</html>
