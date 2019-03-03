@@ -13,7 +13,6 @@ socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
 
-
 # 后台线程 产生数据，即刻推送至前端
 def background_thread():
     count = 0
